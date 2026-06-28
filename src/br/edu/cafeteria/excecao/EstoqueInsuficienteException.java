@@ -1,7 +1,7 @@
 package br.edu.cafeteria.excecao;
 
-class EstoqueInsuficienteException extends Exception {
-	EstoqueInsuficienteException(String mensagem) {
-		super(mensagem);
-	}
+public class EstoqueInsuficienteException extends Exception {
+    public EstoqueInsuficienteException(String mensagem) {
+        super(mensagem);
+    }
 }

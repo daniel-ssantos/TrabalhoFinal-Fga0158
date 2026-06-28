@@ -1,7 +1,7 @@
 package br.edu.cafeteria.excecao;
 
-class PontosInsuficientesException extends Exception {
-	PontosInsuficientesException(String mensagem) {
-		super(mensagem);
-	}
+public class PontosInsuficientesException extends Exception {
+    public PontosInsuficientesException(String mensagem) {
+        super(mensagem);
+    }
 }
