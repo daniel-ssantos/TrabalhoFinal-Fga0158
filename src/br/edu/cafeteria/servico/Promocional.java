@@ -1,5 +1,5 @@
 package br.edu.cafeteria.servico;
 
-interface Promocional {
-
+public interface Promocional {
+    double aplicarDesconto(double valorOriginal);
 }
