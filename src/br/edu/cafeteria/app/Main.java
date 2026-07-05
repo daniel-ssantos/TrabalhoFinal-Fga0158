@@ -100,20 +100,26 @@ public class Main {
         }
 
         Pedido pedido = new Pedido(atendente, clienteAtual);
-
+        
+        System.out.println("\n=========================================");
+        System.out.printf(" COMANDA CRIADA COM SUCESSO: #%03d\n", pedido.getNumeroPedido());
+        System.out.println("=========================================");
+        
         boolean adicionarItens = true;
         while (adicionarItens) {
 
             if (pedido.getItens() != null && !pedido.getItens().isEmpty()) {
-                System.out.println("\n CARRINHO ATUAL");
+                System.out.printf("\n CARRINHO DA COMANDA #%03d\n", pedido.getNumeroPedido());
                 for (ItemPedido ip : pedido.getItens()) {
                     double subtotalItem = ip.getQuantidade() * ip.getProduto().getPrecoBase();
                     System.out.printf("%d x %s (R$ %.2f) = R$ %.2f\n",
                             ip.getQuantidade(), ip.getProduto().getNome(), ip.getProduto().getPrecoBase(), subtotalItem);
                 }
-                System.out.printf("Total Parcial: R$ %.2f\n", pedido.calcularTotal());
+                System.out.printf("Total: R$ %.2f\n", pedido.calcularTotal());
                 System.out.println("-------------------------");
             }
+            
+            estoqueProdutos.sort((p1, p2) -> p1.getCodigoUnico().compareToIgnoreCase(p2.getCodigoUnico()));
 
             int itensDisponiveis = 0;
             System.out.println("\n-- Cardápio Disponível --");
@@ -127,7 +133,7 @@ public class Main {
                     } else if (p instanceof Comida) {
                         Comida c = (Comida) p;
                         String restricao = c.isVeganoOuSemGluten() ? "[Vegano/Sem Glúten]" : "[Tradicional]";
-                        System.out.printf("[%s] %s %s [Tempo de preparo est. %s min] - R$ %.2f (Estoque: %d unid.)\n",
+                        System.out.printf("[%s] %s %s [Preparo. %d min] - R$ %.2f (Estoque: %d unid.)\n",
                                 c.getCodigoUnico(), c.getNome(), restricao, c.getTempoPreparoMinutos(), c.getPrecoBase(), c.getQuantidadeEstoque());
                     }
                     itensDisponiveis++;
@@ -205,17 +211,18 @@ public class Main {
         double total = pedido.calcularTotal();
         if (total == 0) {
             System.out.println("Pedido vazio. Venda cancelada. Retornando ao menu...");
+            Pedido.decrementarContador();
             return;
         }
 
-        System.out.println("\n--- FECHAMENTO DE CONTA ---");
+        System.out.printf("\n--- FECHAMENTO DA COMANDA #%03d ---\n", pedido.getNumeroPedido());
 
         if (isDiaGeek) {
             total = pedido.aplicarDesconto(total);
             System.out.println("Desconto de Evento Geek (10%) aplicado!");
         }
 
-        System.out.printf("Total parcial da conta: R$ %.2f\n", total);
+        System.out.printf("Total: R$ %.2f\n", total);
 
         if (cliente != null && cliente.getSaldoXP() > 0) {
             double pontosNecessariosPara100 = total * 10.0;
